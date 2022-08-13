@@ -8,7 +8,6 @@ import { db } from "../FirebaseConfig";
 
 function Layout({ children }) {
   const session = useSession();
-  console.log(session);
 
   if (!session || session.status === "unauthenticated") {
     return <Login />;

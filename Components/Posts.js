@@ -15,10 +15,7 @@ import { useSession } from "next-auth/react";
 function Posts() {
   const session = useSession();
   const [postData, loading, error] = useCollection(
-    query(
-      collection(db, `users/${session.data.user.email}/posts`),
-      orderBy("time", "desc")
-    )
+    collection(db, `users/${session.data.user.email}/posts`)
   );
   const [friendsList] = useDocument(
     doc(db, `users/${session.data.user.email}`)
@@ -28,7 +25,7 @@ function Posts() {
 
   useEffect(() => {
     async function getFriendPost() {
-      if (friendsList && postData.docs && !loading && !postData.empty) {
+      if (friendsList && postData?.docs && !loading && !postData.empty) {
         let postClone = postData.docs;
         if (friendsList.data().friends) {
           for (const friend of friendsList.data().friends) {
@@ -38,18 +35,20 @@ function Posts() {
             console.log(postClone[0]);
             friendPostData.forEach((doc) => {
               postClone.push(doc);
-              console.log(postClone);
             });
           }
         }
         setPostList(postClone);
-        console.log(postList);
       }
     }
     (async () => await getFriendPost())();
   }, [postData]);
 
-  const postDisplay = postList.map((post) => (
+  const postListSorting = postList.sort(
+    (postA, postB) => Number(postB.data().time) - Number(postA.data().time)
+  );
+
+  const postDisplay = postListSorting.map((post) => (
     <SinglePost
       key={post.id}
       postOwner={post.data().postOwner}
@@ -59,7 +58,6 @@ function Posts() {
       postContent={post.data().postContent}
       postImgSrc={post.data().postImgSrc}
       timestamp={post.data().time}
-      likedBy={post.data().likedBy}
     />
   ));
 

@@ -4,9 +4,8 @@ import FriendRequestNoti from "./FriendRequestNoti";
 function FriendRequestBoard({
   clickFriendRequestBoard,
   requestList,
-  onClickOutside,
+  onClickOutsideFRB,
 }) {
-  console.log(requestList);
   const boardContent = requestList?.friendRequests.map((email) => (
     <FriendRequestNoti friendEmail={email} />
   ));
@@ -16,14 +15,14 @@ function FriendRequestBoard({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
-        onClickOutside && onClickOutside();
+        onClickOutsideFRB && onClickOutsideFRB();
       }
     };
     document.addEventListener("click", handleClickOutside, true);
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
-  }, [onClickOutside]);
+  }, [onClickOutsideFRB]);
 
   let showState = "hidden";
 

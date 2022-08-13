@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { BeakerIcon } from "@heroicons/react/solid";
 import HeaderIcon from "./HeaderIcon";
@@ -9,8 +9,14 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import FriendRequestBoard from "./FriendRequestBoard";
+import { Context } from "../pages/_app";
+import NotiBoard from "./NotiBoard";
 
 function Header() {
+  const { chatbox, noti } = useContext(Context);
+
+  const [showChatBox, setShowChatBox] = chatbox;
+  const [showNoti, setShowNoti] = noti;
   const session = useSession();
   const [searchInput, setSearchInput] = useState("");
   const router = useRouter();
@@ -18,19 +24,34 @@ function Header() {
     doc(db, `users/${session.data.user.email}`)
   );
   const [clickFriendRequestBoard, setClickFriendRequestBoard] = useState(false);
-  // const [friendRequestsData, setFriendRequestsData] = useState("");
 
-  // useEffect(() => {
-  //   if (friendRequestss && !loading)
-  //     setFriendRequestsData(friendRequestss.data());
-  // }, [friendRequestss]);
+  const handleClickShowChatbox = () => {
+    setShowChatBox(() => {
+      if (showChatBox) {
+        return "";
+      } else return "hidden";
+    });
+    if (!showNoti) {
+      setShowNoti("hidden");
+    }
+  };
 
-  // console.log(friendRequestsData);
+  const handleClickShowNoti = () => {
+    setShowNoti(() => {
+      if (showNoti) {
+        return "";
+      } else return "hidden";
+    });
+    if (!showChatBox) {
+      setShowChatBox("hidden");
+    }
+  };
+
+  // console.log(showChatBox);
 
   useEffect(() => {
     async function checkUserExist() {
       const userDoc = await getDoc(doc(db, `users/${session.data.user.email}`));
-      console.log(userDoc.exists());
 
       if (!userDoc.exists()) {
         const userProfileData = {
@@ -44,11 +65,6 @@ function Header() {
           friendRequests: [],
           friendRequestSent: [],
         });
-        // await updateDoc(doc(db, `users/${session.data.user.email}`), {
-        //   friends: [],
-        //   friendRequests: [],
-        //   friendRequestSent: [],
-        // });
       }
     }
     (async () => await checkUserExist())();
@@ -130,14 +146,18 @@ function Header() {
           <FriendRequestBoard
             clickFriendRequestBoard={clickFriendRequestBoard}
             requestList={friendRequestss?.data()}
-            onClickOutside={() => setClickFriendRequestBoard(false)}
+            onClickOutsideFRB={() => setClickFriendRequestBoard(false)}
           />
         </div>
-        <div className="icon">
+        <div className="icon" onClick={handleClickShowChatbox}>
           <BeakerIcon className="h-6" />
         </div>
-        <div className="icon">
+        <div className="icon" onClick={handleClickShowNoti}>
           <BeakerIcon className="h-6" />
+          <NotiBoard
+            showNoti={showNoti}
+            onClickOutsideNB={() => setShowNoti("hidden")}
+          />
         </div>
         <div
           className="flex items-center w-10 h-10 overflow-hidden rounded-full cursor-pointer"

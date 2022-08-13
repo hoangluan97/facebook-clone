@@ -1,40 +1,11 @@
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
-import Header from "../Components/Header";
-import Login from "../Components/Login";
 import LeftSideBar from "../Components/LeftSideBar";
 import NewsFeed from "../Components/NewsFeed";
 import RightSideBar from "../Components/RightSideBar";
-import { doc, updateDoc, getDoc, setDoc, collection } from "firebase/firestore";
-import { db } from "../FirebaseConfig";
-import { useEffect } from "react";
 
 export default function Home() {
   const session = useSession();
-  console.log("check");
-  // useEffect(() => {
-  //   async function checkUserExist() {
-  //     const userDoc = await getDoc(doc(db, `user/${session.data.user.email}`));
-  //     if (!userDoc.exists) {
-  //       const userProfileData = {
-  //         userName: session.data.user.name,
-  //         userEmail: session.data.user.email,
-  //         userAvatar: session.data.user.image,
-  //       };
-  //       await setDoc(
-  //         doc(db, `users/${session.data.user.email}`),
-  //         userProfileData
-  //       );
-  //       await updateDoc(doc(db, `users/${session.data.user.email}`), {
-  //         friends: [],
-  //         friendRequests: [],
-  //         friendRequestSent: [],
-  //       });
-  //     }
-  //   }
-  //   (async () => await checkUserExist())();
-  // }, []);
-  // getDoc(doc(db, `user/${session.data.user.email}`));
   return (
     <div>
       <Head>

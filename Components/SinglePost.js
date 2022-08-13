@@ -15,7 +15,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import Comment from "./Comment";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import { async } from "@firebase/util";
 
 function SinglePost({
   name,
@@ -25,16 +26,25 @@ function SinglePost({
   timestamp,
   postId,
   postOwner,
-  likedBy,
 }) {
   const session = useSession();
-  const [localLike, setLocalLike] = useState(likedBy.length);
-  const [likeData, setLikeData] = useState(likedBy);
   const [commentData] = useCollection(
     collection(db, `users/${postOwner}/posts/${postId}/comments`)
   );
+  const [likedBy, loading, error] = useDocument(
+    doc(db, `users/${postOwner}/posts/${postId}`)
+  );
   const time = new Date(timestamp && timestamp.toDate()).toLocaleString();
   const [comment, setComment] = useState("");
+  const [likeData, setLikeData] = useState([]);
+  const [localLike, setLocalLike] = useState("");
+
+  useEffect(() => {
+    if (likedBy && !loading) {
+      setLikeData(likedBy.data().likedBy);
+      setLocalLike(likedBy.data().likedBy.length);
+    }
+  }, [likedBy]);
   const submitComment = (e) => {
     e.preventDefault();
     if (comment) {
@@ -48,27 +58,28 @@ function SinglePost({
     }
   };
 
-  const handleLikeButton = () => {
-    console.log(likedBy);
-    if (!likedBy.includes(session.data.user.email)) {
-      setLocalLike(localLike + 1);
-      setLikeData([...likeData, session.data.user.email]);
+  const handleLikeButton = async () => {
+    if (!likeData.includes(session.data.user.email)) {
+      let cloneLikeArray = likeData;
+      cloneLikeArray.push(session.data.user.email);
+      console.log(cloneLikeArray);
+      await updateDoc(doc(db, `users/${postOwner}/posts/${postId}`), {
+        likedBy: cloneLikeArray,
+      });
+      setLikeData(cloneLikeArray);
     } else {
-      setLocalLike(localLike - 1);
       let cloneLikeArray = likeData;
       const userPosition = cloneLikeArray.findIndex(
         (user) => user == session.data.user.email
       );
-      console.log("gia tri setstate", cloneLikeArray.splice(userPosition, 1));
-      setLikeData(cloneLikeArray.splice(userPosition, 1));
+      cloneLikeArray.splice(userPosition, 1);
+      await updateDoc(doc(db, `users/${postOwner}/posts/${postId}`), {
+        likedBy: cloneLikeArray,
+      });
+      console.log(cloneLikeArray);
+      setLikeData(cloneLikeArray);
     }
   };
-
-  useEffect(() => {
-    updateDoc(doc(db, `users/${postOwner}/posts/${postId}`), {
-      likedBy: likeData,
-    });
-  }, [likeData]);
 
   return (
     <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm">

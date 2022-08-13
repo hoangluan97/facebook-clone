@@ -6,6 +6,7 @@ import Image from "next/image";
 
 function LeftSideBar() {
   const session = useSession();
+  console.log("co gi khong");
   return (
     <div className="hidden xl:inline-flex md:w-[280px] xl:w-[24%] 2xl:w-[360px] flex-col p-4 space-y-2 font-medium sticky top-16 self-start">
       <div className="flex items-center space-x-2 ">
