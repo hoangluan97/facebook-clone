@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 function Login() {
   const router = useRouter();
+  const session = useSession();
+  useEffect(() => {
+    router.push("/");
+  }, [session.status]);
   return (
     <div className="mt-10 space-y-16 flex flex-col justify-center items-center">
       <div>
@@ -19,7 +23,7 @@ function Login() {
       <div className="flex space-x-5">
         <div
           onClick={() => {
-            router.push("/");
+            // router.push("/");
             signIn();
           }}
           className="flex justify-center cursor-pointer border-2 text-black border-blue-600 w-[200px] p-3"

@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import FriendRequestNoti from "./FriendRequestNoti";
 
 function FriendRequestBoard({
-  clickFriendRequestBoard,
+  friendRequestRef,
+  showFriendRequest,
   requestList,
   onClickOutsideFRB,
 }) {
@@ -14,7 +15,11 @@ function FriendRequestBoard({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        !friendRequestRef.current.contains(event.target)
+      ) {
         onClickOutsideFRB && onClickOutsideFRB();
       }
     };
@@ -24,23 +29,19 @@ function FriendRequestBoard({
     };
   }, [onClickOutsideFRB]);
 
-  let showState = "hidden";
-
-  if (clickFriendRequestBoard) {
-    showState = "block";
-  } else {
-    showState = "hidden";
-  }
-
   return (
     <div
       ref={ref}
       className={
-        "absolute top-[100%] min-w-fit right-6 z-10 flex flex-col justify-center items-center border-2 border-blue-400 " +
-        showState
+        "absolute shadow-md top-[78%] min-w-[200px] rounded-md min-h-[50px] right-48 z-10 flex flex-col justify-center items-center border-2 bg-white border-blue-400 " +
+        showFriendRequest
       }
     >
-      {boardContent}
+      {requestList?.friendRequests.length ? (
+        boardContent
+      ) : (
+        <>Không có lời lời kết bạn</>
+      )}
     </div>
   );
 }

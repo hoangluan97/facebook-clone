@@ -22,11 +22,6 @@ function RightSideBar() {
     <div className="hidden rightbar:inline-flex rightbar:w-[280px] xl:w-[24%] 2xl:w-[360px] flex-col p-4 font-medium sticky top-16 self-start">
       <div className="flex justify-between items-center w-full">
         <p>Người liên hệ</p>
-        <div className="flex w-1/3 justify-between">
-          <BeakerIcon className="h-6 p-1 cursor-pointer hover:bg-gray-300 rounded-full" />
-          <BeakerIcon className="h-6 p-1 cursor-pointer hover:bg-gray-300 rounded-full" />
-          <BeakerIcon className="h-6 p-1 cursor-pointer hover:bg-gray-300 rounded-full" />
-        </div>
       </div>
       {onlineFriendContent}
     </div>

@@ -2,7 +2,15 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import SideBarRow from "./SideBarRow";
-import { BeakerIcon } from "@heroicons/react/solid";
+import InputIcon from "./InputIcon";
+import {
+  BeakerIcon,
+  PhotographIcon,
+  TagIcon,
+  VideoCameraIcon,
+  XCircleIcon,
+  XIcon,
+} from "@heroicons/react/solid";
 import { db } from "../FirebaseConfig";
 import {
   doc,
@@ -113,24 +121,24 @@ function PostInput() {
         </form>
       </div>
       {imageToPost && (
-        <div className="px-12 w-full border my-4 block relative">
-          <BeakerIcon
+        <div className="px-12 w-full border my-4 block relative h-80">
+          <XIcon
             onClick={removeImg}
             className="absolute top-1 right-4 z-10 w-[15px] h-[15px] hover:cursor-pointer"
           />
           <Image
             src={imageToPost}
-            layout="responsive"
-            width={300}
-            height={200}
+            layout="fill"
+            objectFit="contain"
+            className="w-full h-full"
           />
         </div>
       )}
       <div className="w-[90%] h-[1px] bg-gray-300"></div>
       <div className="flex w-full justify-around">
-        <SideBarRow Icon={BeakerIcon} title="Video trực tiếp" />
+        <InputIcon Icon={VideoCameraIcon} title="Video trực tiếp" />
         <div onClick={() => imgInputref.current.click()}>
-          <SideBarRow Icon={BeakerIcon} title="Ảnh/video" />
+          <InputIcon Icon={PhotographIcon} title="Ảnh/video" />
           <input
             hidden
             ref={imgInputref}
@@ -140,7 +148,7 @@ function PostInput() {
             onChange={addImageToPost}
           />
         </div>
-        <SideBarRow Icon={BeakerIcon} title="Cảm xúc/hoạt động" />
+        <InputIcon Icon={TagIcon} title="Cảm xúc/hoạt động" />
       </div>
     </div>
   );

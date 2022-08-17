@@ -1,7 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { BeakerIcon } from "@heroicons/react/solid";
-import HeaderIcon from "./HeaderIcon";
+import {
+  SearchIcon,
+  UserIcon,
+  ChatIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/solid";
 import Avatar from "../images/fblogo.png";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -23,7 +27,10 @@ function Header() {
   const [friendRequestss, loading, error] = useDocument(
     doc(db, `users/${session.data.user.email}`)
   );
-  const [clickFriendRequestBoard, setClickFriendRequestBoard] = useState(false);
+  const [showFriendRequest, setShowFriendRequest] = useState("hidden");
+
+  const notiRef = useRef(null);
+  const friendRequestRef = useRef(null);
 
   const handleClickShowChatbox = () => {
     setShowChatBox(() => {
@@ -34,20 +41,40 @@ function Header() {
     if (!showNoti) {
       setShowNoti("hidden");
     }
+    if (!showFriendRequest) {
+      setShowFriendRequest("hidden");
+    }
   };
 
   const handleClickShowNoti = () => {
-    setShowNoti(() => {
-      if (showNoti) {
-        return "";
-      } else return "hidden";
-    });
+    if (showNoti) {
+      setShowNoti("");
+    }
+    if (!showNoti) {
+      setShowNoti("hidden");
+    }
+    if (!showChatBox) {
+      setShowChatBox("hidden");
+    }
+    if (!showFriendRequest) {
+      setShowFriendRequest("hidden");
+    }
+  };
+
+  const handleClickShowFriendRequest = () => {
+    if (showFriendRequest) {
+      setShowFriendRequest("");
+    }
+    if (!showFriendRequest) {
+      setShowFriendRequest("hidden");
+    }
+    if (!showNoti) {
+      setShowNoti("hidden");
+    }
     if (!showChatBox) {
       setShowChatBox("hidden");
     }
   };
-
-  // console.log(showChatBox);
 
   useEffect(() => {
     async function checkUserExist() {
@@ -70,33 +97,23 @@ function Header() {
     (async () => await checkUserExist())();
   }, []);
 
-  const onChangeClickState = useCallback(() => {
-    if (friendRequestss && !loading) {
-      if (clickFriendRequestBoard) {
-        setClickFriendRequestBoard(false);
-      } else {
-        setClickFriendRequestBoard(true);
-      }
-    }
-  }, [friendRequestss]);
-
   const notiNumber = () => {
     if (friendRequestss && !loading) {
       const number = friendRequestss.data()?.friendRequests;
-      // setFriendRequestsData(friendRequestss.data().friendRequests);
-
-      return (
-        <span className="rounded-full absolute top-[-8px] right-[-8px] font-medium bg-red-400 min-w-fit h-auto flex justify-center items-center w-5 text-[12px]">
-          {number?.length}
-        </span>
-      );
+      if (number?.length) {
+        return (
+          <span className="rounded-full absolute top-[-8px] right-[-8px] font-medium bg-red-400 min-w-fit h-auto flex justify-center items-center w-5 text-[12px]">
+            {number?.length}
+          </span>
+        );
+      }
     }
   };
 
   return (
     <div className="flex items-center justify-between p-2 shadow-md sticky top-0 bg-white z-10">
-      <div className="flex justify-start items-center space-x-2 border">
-        <div onClick={() => router.push("/")}>
+      <div className="flex justify-start items-center space-x-2 ">
+        <div className="cursor-pointer" onClick={() => router.push("/")}>
           <Image
             src="https://www.transparentpng.com/thumb/facebook-logo-png/photo-facebook-logo-png-hd-25.png"
             width={50}
@@ -106,7 +123,7 @@ function Header() {
           />
         </div>
         <div className="flex min-w-fit rounded-full h-10 items-center bg-gray-100 p-2">
-          <BeakerIcon className="h-6" />
+          <SearchIcon className="h-6" />
           <form action="" className="hidden xl:inline-flex max-w-fit relative">
             <input
               onChange={(e) => setSearchInput(e.target.value)}
@@ -127,38 +144,34 @@ function Header() {
           </form>
         </div>
       </div>
-      <div className="hidden sm:inline-flex justify-start items-center pl-8 border grow">
-        <div className="flex space-x-6 md:space-x-1">
-          <HeaderIcon Icon={BeakerIcon} />
-          <HeaderIcon Icon={BeakerIcon} />
-          <HeaderIcon Icon={BeakerIcon} />
-          <HeaderIcon Icon={BeakerIcon} />
-          <HeaderIcon Icon={BeakerIcon} />
-        </div>
-      </div>
       <div className="flex justify-end space-x-4 ">
         <div
-          onClick={onChangeClickState}
+          ref={friendRequestRef}
+          onClick={handleClickShowFriendRequest}
           className="icon relative overflow-visible"
         >
           {notiNumber()}
-          <BeakerIcon className="h-6" />
-          <FriendRequestBoard
-            clickFriendRequestBoard={clickFriendRequestBoard}
-            requestList={friendRequestss?.data()}
-            onClickOutsideFRB={() => setClickFriendRequestBoard(false)}
-          />
+          <UserIcon className="h-6" />
         </div>
+        <FriendRequestBoard
+          friendRequestRef={friendRequestRef}
+          showFriendRequest={showFriendRequest}
+          requestList={friendRequestss?.data()}
+          onClickOutsideFRB={() => setShowFriendRequest("hidden")}
+        />
         <div className="icon" onClick={handleClickShowChatbox}>
-          <BeakerIcon className="h-6" />
+          <ChatIcon className="h-6" />
         </div>
-        <div className="icon" onClick={handleClickShowNoti}>
-          <BeakerIcon className="h-6" />
-          <NotiBoard
-            showNoti={showNoti}
-            onClickOutsideNB={() => setShowNoti("hidden")}
-          />
+        <div className="icon" ref={notiRef} onClick={handleClickShowNoti}>
+          <InformationCircleIcon className="h-6" />
         </div>
+        <NotiBoard
+          notiRef={notiRef}
+          showNoti={showNoti}
+          onClickOutsideNB={() => {
+            setShowNoti("hidden");
+          }}
+        />
         <div
           className="flex items-center w-10 h-10 overflow-hidden rounded-full cursor-pointer"
           onClick={() => {

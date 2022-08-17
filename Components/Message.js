@@ -11,8 +11,14 @@ function Message({ messageDoc }) {
   }
 
   return (
-    <div className={`w-full p-2 flex` + " " + position}>
-      <p className={"max-w-fit p-1" + " " + color}>{messageDoc.message}</p>
+    <div className={`w-full p-1 flex` + " " + position}>
+      <p
+        className={
+          "max-w-fit p-1 text-[15px] font-normal rounded-md" + " " + color
+        }
+      >
+        {messageDoc.message}
+      </p>
     </div>
   );
 }

@@ -1,16 +1,31 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { useDocument } from "react-firebase-hooks/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  limit,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../FirebaseConfig";
 import { useSession } from "next-auth/react";
+import Notitag from "./Notitag";
 
-function NotiBoard({ showNoti, onClickOutsideNB }) {
+function NotiBoard({ showNoti, onClickOutsideNB, notiRef }) {
   const session = useSession();
   const ref = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        !notiRef.current.contains(event.target)
+      ) {
+        console.log(ref.current.contains(event.target));
         onClickOutsideNB && onClickOutsideNB();
       }
     };
@@ -20,32 +35,37 @@ function NotiBoard({ showNoti, onClickOutsideNB }) {
     };
   }, [onClickOutsideNB]);
 
+  const [notiData, loading, error] = useCollection(
+    query(
+      collection(db, `noti/posts/${session.data.user.email}`),
+      orderBy("Time"),
+      limit(10)
+    )
+  );
+
+  const [notiState, setNotiState] = useState([]);
+
+  useEffect(() => {
+    if (notiData && !loading) {
+      setNotiState(notiData.docs);
+    }
+  }, [notiData]);
+
+  const notiDisplay = notiState.map((noti) => (
+    <Notitag key={noti.id} noti={noti} />
+  ));
+
   return (
     <div
       ref={ref}
       className={
-        "absolute bg-white top-[100%] w-80 justify-start items-start right-6 z-10 flex flex-col border-2 border-blue-400 space-y-3 py-2 px-1" +
+        "absolute shadow-md right-20 top-[78%] rounded-md bg-white w-80 justify-start items-start  z-10 flex flex-col border-2 border-blue-400 space-y-3 py-2 px-1" +
         " " +
         showNoti
       }
     >
       <p className="font-medium">Thông báo</p>
-      <div className="flex space-x-2 justify-start w-90% items-center">
-        <div>
-          <Image
-            src={session.data.user.image}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <p className="text-[14px] text-justify">
-            <span>{session.data.user.name}</span> đã loại bài viết của bạn
-            aaaaaa aaaa aaaaa aaaa aaaa aaaaa aaaaaa aaaaa
-          </p>
-        </div>
-      </div>
+      {notiState.length ? notiDisplay : <p>Không có thông báo nào</p>}
     </div>
   );
 }

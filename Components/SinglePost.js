@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import image from "../images/Capture.PNG";
-import { BeakerIcon } from "@heroicons/react/solid";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../FirebaseConfig";
+import {
+  AnnotationIcon,
+  BeakerIcon,
+  ShareIcon,
+  ThumbUpIcon as ThumUpIconSolid,
+} from "@heroicons/react/solid";
+import { ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
+
 import {
   doc,
   updateDoc,
@@ -12,6 +16,7 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import Comment from "./Comment";
@@ -45,27 +50,71 @@ function SinglePost({
       setLocalLike(likedBy.data().likedBy.length);
     }
   }, [likedBy]);
+
   const submitComment = (e) => {
     e.preventDefault();
-    if (comment) {
+    const Timestamp = new Date();
+    if (comment && Timestamp) {
       addDoc(collection(db, `users/${postOwner}/posts/${postId}/comments`), {
         commentUserName: session.data.user.name,
         commentUserImg: session.data.user.image,
+        commentUserEmail: session.data.user.email,
         commentContent: comment,
-        commentTime: serverTimestamp(),
+        commentTime: Timestamp,
       });
+      if (!(postOwner == session.data.user.email)) {
+        setDoc(
+          doc(
+            db,
+            "noti",
+            "posts",
+            postOwner,
+            postId + session.data.user.email + "comment" + Number(Timestamp)
+          ),
+          {
+            Email: session.data.user.email,
+            Img: session.data.user.image,
+            Name: session.data.user.name,
+            Time: Timestamp,
+            actionType: " đã bình luận về bài viết của bạn",
+            post: postId,
+            postOwner: postOwner,
+          }
+        );
+      }
       setComment("");
     }
   };
+
+  const delelePost = () => {};
 
   const handleLikeButton = async () => {
     if (!likeData.includes(session.data.user.email)) {
       let cloneLikeArray = likeData;
       cloneLikeArray.push(session.data.user.email);
-      console.log(cloneLikeArray);
       await updateDoc(doc(db, `users/${postOwner}/posts/${postId}`), {
         likedBy: cloneLikeArray,
       });
+      if (!(postOwner == session.data.user.email)) {
+        await setDoc(
+          doc(
+            db,
+            "noti",
+            "posts",
+            postOwner,
+            postId + session.data.user.email + "liked"
+          ),
+          {
+            Email: session.data.user.email,
+            Img: session.data.user.image,
+            Name: session.data.user.name,
+            Time: serverTimestamp(),
+            actionType: " đã thích bài viết của bạn",
+            post: postId,
+            postOwner: postOwner,
+          }
+        );
+      }
       setLikeData(cloneLikeArray);
     } else {
       let cloneLikeArray = likeData;
@@ -76,10 +125,20 @@ function SinglePost({
       await updateDoc(doc(db, `users/${postOwner}/posts/${postId}`), {
         likedBy: cloneLikeArray,
       });
-      console.log(cloneLikeArray);
+      await deleteDoc(
+        doc(
+          db,
+          "noti",
+          "posts",
+          postOwner,
+          postId + session.data.user.email + "liked"
+        )
+      );
       setLikeData(cloneLikeArray);
     }
   };
+
+  const deletePost = () => {};
 
   return (
     <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm">
@@ -97,26 +156,25 @@ function SinglePost({
         </div>
       </div>
       <div className="px-4 flex flex-col justify-start w-full items-start">
-        <p className="leading-tight font-normal text-[14px] text-left">
+        <p className="leading-tight font-normal text-[17px] text-left px-3">
           {postContent}
         </p>
       </div>
       {postImgSrc && (
-        <div className="px-12 w-full border my-4 block relative max-h-fit">
+        <div className="px-12 w-full border my-4 block relative h-80 min-h-fit">
           <Image
             src={postImgSrc}
-            layout="responsive"
-            width={200}
-            height={200}
-            className="object-cover w-full h-full"
+            layout="fill"
+            objectFit="contain"
+            className="w-full h-full"
           />
         </div>
       )}
-      <div className="w-full flex justify-start px-10 font-medium space-x-2">
-        <BeakerIcon className="w-[20px]" />
+      <div className="w-full flex justify-start px-10 font-medium space-x-0.5 mt-3">
+        <ThumbUpIcon className="w-[16px]" />
         <p>{localLike}</p>
       </div>
-      <div className="p-4 w-full flex flex-col justify-between space-y-1">
+      <div className="p-1 w-full flex flex-col justify-between space-y-1">
         <div className="w-[100%] h-[1px] bg-gray-300"></div>
 
         <div className="flex justify-between">
@@ -124,15 +182,19 @@ function SinglePost({
             onClick={handleLikeButton}
             className="cursor-pointer flex w-1/3 justify-center space-x-4 hover:bg-gray-300/50 h-8 items-center rounded-md"
           >
-            <BeakerIcon className="h-6" />
+            {likeData.includes(session.data.user.email) ? (
+              <ThumUpIconSolid className="h-6" />
+            ) : (
+              <ThumbUpIcon className="h-6" />
+            )}
             <p className="text-[14px] text-gray-600 font-medium">Thích</p>
           </div>
           <div className="cursor-pointer flex w-1/3 justify-center space-x-4 hover:bg-gray-300/50 h-8 items-center pl-4 rounded-md">
-            <BeakerIcon className="h-6" />
+            <AnnotationIcon className="h-6" />
             <p className="text-[14px] text-gray-600 font-medium">Bình luận</p>
           </div>
           <div className="cursor-pointer flex w-1/3 justify-center space-x-4 hover:bg-gray-300/50 h-8 items-center pl-4 rounded-md">
-            <BeakerIcon className="h-6" />
+            <ShareIcon className="h-6" />
             <p className="text-[14px] text-gray-600 font-medium">Chia sẻ</p>
           </div>
         </div>
@@ -147,6 +209,7 @@ function SinglePost({
               imgSrc={data.data().commentUserImg}
               name={data.data().commentUserName}
               content={data.data().commentContent}
+              commentTime={data.data().commentTime}
             />
           ))}
         <div className="flex w-full  space-x-2 justify-center items-center">

@@ -53,6 +53,7 @@ function OnlineFriend({ onlineFriendEmail }) {
           <Messagebox
             showStatus={showChatBox}
             messageTo={onlineFriendEmail}
+            name={friendProfile?.data()?.userProfileData.userName}
             handleClickShowChatbox={handleClickShowChatbox}
           />
         </>
