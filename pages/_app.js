@@ -10,10 +10,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [showChatBox, setShowChatBox] = useState("hidden");
   const [showNoti, setShowNoti] = useState("hidden");
 
-  useEffect(() => {
-    import("tw-elements");
-  }, []);
-
   return (
     <SessionProvider session={session}>
       <Context.Provider
