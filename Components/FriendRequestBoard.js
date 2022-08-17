@@ -8,7 +8,7 @@ function FriendRequestBoard({
   onClickOutsideFRB,
 }) {
   const boardContent = requestList?.friendRequests.map((email) => (
-    <FriendRequestNoti friendEmail={email} />
+    <FriendRequestNoti key={email} friendEmail={email} />
   ));
 
   const ref = useRef(null);
