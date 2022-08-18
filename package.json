@@ -2,7 +2,7 @@
   "name": "facebook",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://facebookclone.com",
+  "homepage": "https://hoangluan97.github.io/facebook-clone/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
