@@ -28,13 +28,7 @@ function Login() {
           }}
           className="flex justify-center cursor-pointer border-2 text-black border-blue-600 w-[200px] p-3"
         >
-          Login with Facebook
-        </div>
-        <div
-          onClick={signOut}
-          className="flex justify-center cursor-pointer border-2 border-black w-[200px] p-3"
-        >
-          Login with your account
+          Login with Gmail
         </div>
       </div>
     </div>

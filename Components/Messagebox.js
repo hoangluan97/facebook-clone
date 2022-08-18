@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   limit,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -34,16 +35,19 @@ function Messagebox({ messageTo, showStatus, handleClickShowChatbox, name }) {
   };
 
   const [messageData, loading, error] = useCollection(
-    collection(db, `messages/${session.data.user.email}/${messageTo}`)
+    query(
+      collection(db, `messages/${session.data.user.email}/${messageTo}`),
+      orderBy("time")
+    )
   );
 
   const messageShow = () => {
     if (messageData && !loading) {
-      const messageSorting = messageData?.docs?.sort(
-        (messageA, messageB) =>
-          Number(messageA.data().time) - Number(messageB.data().time)
-      );
-      const content = messageSorting.map((message) => (
+      // const messageSorting = messageData?.docs?.sort(
+      //   (messageA, messageB) =>
+      //     Number(messageA.data().time) - Number(messageB.data().time)
+      // );
+      const content = messageData?.docs.map((message) => (
         <Message messageDoc={message.data()} key={message.id} />
       ));
       return content;
