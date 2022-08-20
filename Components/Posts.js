@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SinglePost from "./SinglePost";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import {
-  collection,
-  doc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import { useSession } from "next-auth/react";
 
@@ -25,14 +18,18 @@ function Posts() {
 
   useEffect(() => {
     async function getFriendPost() {
-      if (friendsList && postData?.docs && !loading && !postData.empty) {
+      if (
+        friendsList &&
+        Boolean(postData || postData?.docs.data() == []) &&
+        !loading
+      ) {
         let postClone = postData.docs;
+        console.log("hi");
         if (friendsList.data().friends) {
           for (const friend of friendsList.data().friends) {
             let friendPostData = await getDocs(
               collection(db, `users/${friend}/posts`)
             );
-            console.log(postClone[0]);
             friendPostData.forEach((doc) => {
               postClone.push(doc);
             });
@@ -42,7 +39,7 @@ function Posts() {
       }
     }
     (async () => await getFriendPost())();
-  }, [postData]);
+  }, [postData, friendsList]);
 
   const postListSorting = postList.sort(
     (postA, postB) => Number(postB.data().time) - Number(postA.data().time)

@@ -25,10 +25,10 @@ function Layout({ children }) {
     //   }
     // }, [user]);
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <main>{children}</main>
-      </>
+        <main className="grow bg-gray-100">{children}</main>
+      </div>
     );
   }
 }

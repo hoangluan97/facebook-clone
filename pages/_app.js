@@ -7,7 +7,7 @@ import React from "react";
 export const Context = React.createContext(null);
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  const [showChatBox, setShowChatBox] = useState("hidden");
+  const [showChatBox, setShowChatBox] = useState(["hidden", "", ""]);
   const [showNoti, setShowNoti] = useState("hidden");
 
   return (

@@ -124,13 +124,13 @@ function Header() {
         </div>
         <div className="flex min-w-fit rounded-full h-10 items-center bg-gray-100 p-2">
           <SearchIcon className="h-6" />
-          <form action="" className="hidden xl:inline-flex max-w-fit relative">
+          <form action="" className="xl:inline-flex max-w-fit relative">
             <input
               onChange={(e) => setSearchInput(e.target.value)}
               value={searchInput}
               type="text"
               placeholder="Search Facebook"
-              className="hidden xl:inline-flex focus:outline-none w-40 md:w-60 bg-transparent ml-2 placeholder:text-sm flex-shink "
+              className="focus:outline-none w-40 md:w-60 bg-transparent ml-2 placeholder:text-sm flex-shink "
             />
             <button
               type="submit"
@@ -159,9 +159,9 @@ function Header() {
           requestList={friendRequestss?.data()}
           onClickOutsideFRB={() => setShowFriendRequest("hidden")}
         />
-        <div className="icon" onClick={handleClickShowChatbox}>
+        {/* <div className="icon" onClick={handleClickShowChatbox}>
           <ChatIcon className="h-6" />
-        </div>
+        </div> */}
         <div className="icon" ref={notiRef} onClick={handleClickShowNoti}>
           <InformationCircleIcon className="h-6" />
         </div>

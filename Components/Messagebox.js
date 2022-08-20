@@ -1,13 +1,10 @@
-import { BeakerIcon, XCircleIcon } from "@heroicons/react/solid";
+import { XCircleIcon } from "@heroicons/react/solid";
 import {
   addDoc,
   collection,
-  doc,
-  limit,
   orderBy,
   query,
   serverTimestamp,
-  setDoc,
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,6 +13,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import Message from "./Message";
 
 function Messagebox({ messageTo, showStatus, handleClickShowChatbox, name }) {
+  console.log(showStatus);
   const session = useSession();
   const messageRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -43,10 +41,6 @@ function Messagebox({ messageTo, showStatus, handleClickShowChatbox, name }) {
 
   const messageShow = () => {
     if (messageData && !loading) {
-      // const messageSorting = messageData?.docs?.sort(
-      //   (messageA, messageB) =>
-      //     Number(messageA.data().time) - Number(messageB.data().time)
-      // );
       const content = messageData?.docs.map((message) => (
         <Message messageDoc={message.data()} key={message.id} />
       ));

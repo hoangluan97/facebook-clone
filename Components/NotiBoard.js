@@ -25,7 +25,6 @@ function NotiBoard({ showNoti, onClickOutsideNB, notiRef }) {
         !ref.current.contains(event.target) &&
         !notiRef.current.contains(event.target)
       ) {
-        console.log(ref.current.contains(event.target));
         onClickOutsideNB && onClickOutsideNB();
       }
     };

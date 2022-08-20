@@ -7,7 +7,7 @@ function StoryCard({ imageSrc, bgColor }) {
   return (
     <div
       className={
-        "relative h-48 min-w-[100px] sm:min-w-fit 2xl:h-56 w-23% sm:w-[19%] rounded-xl border box-border shadow-md" +
+        "relative h-48 min-w-[19%] md:w-[19%] sm:min-w-fit 2xl:h-56 w-23% sm:w-[19%] rounded-xl border box-border shadow-md" +
         bgColor
       }
     >

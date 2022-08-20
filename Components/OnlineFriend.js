@@ -13,17 +13,15 @@ function OnlineFriend({ onlineFriendEmail }) {
     doc(db, `users/${onlineFriendEmail}`)
   );
 
-  // const [showChatBox, setShowChatBox] = useState("hidden");
-
   const { chatbox } = useContext(Context);
   const [showChatBox, setShowChatBox] = chatbox;
 
   const handleClickShowChatbox = () => {
-    setShowChatBox(() => {
-      if (showChatBox) {
-        return "";
-      } else return "hidden";
-    });
+    setShowChatBox([
+      "",
+      onlineFriendEmail,
+      friendProfile.data().userProfileData.userName,
+    ]);
   };
 
   const contentOnline = () => {
@@ -50,12 +48,6 @@ function OnlineFriend({ onlineFriendEmail }) {
               </p>
             </div>
           </div>
-          <Messagebox
-            showStatus={showChatBox}
-            messageTo={onlineFriendEmail}
-            name={friendProfile?.data()?.userProfileData.userName}
-            handleClickShowChatbox={handleClickShowChatbox}
-          />
         </>
       );
     }

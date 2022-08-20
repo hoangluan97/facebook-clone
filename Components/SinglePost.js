@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
@@ -7,7 +7,11 @@ import {
   ShareIcon,
   ThumbUpIcon as ThumUpIconSolid,
 } from "@heroicons/react/solid";
-import { ThumbDownIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import {
+  DotsHorizontalIcon,
+  ThumbDownIcon,
+  ThumbUpIcon,
+} from "@heroicons/react/outline";
 
 import {
   doc,
@@ -33,6 +37,7 @@ function SinglePost({
   postOwner,
 }) {
   const session = useSession();
+  const [deleteButtonStatus, setDeleteButtonStatus] = useState("hidden");
   const [commentData] = useCollection(
     collection(db, `users/${postOwner}/posts/${postId}/comments`)
   );
@@ -44,10 +49,33 @@ function SinglePost({
   const [likeData, setLikeData] = useState([]);
   const [localLike, setLocalLike] = useState("");
 
+  const deleteButtonRef = useRef(null);
+
+  const onClickOutsideFRB = () => {
+    setDeleteButtonStatus("hidden");
+  };
+
   useEffect(() => {
-    if (likedBy && !loading) {
-      setLikeData(likedBy.data().likedBy);
-      setLocalLike(likedBy.data().likedBy.length);
+    const handleClickOutside = (event) => {
+      if (
+        deleteButtonRef.current &&
+        !deleteButtonRef.current.contains(event.target)
+        // &&
+        // !friendRequestRef.current.contains(event.target)
+      ) {
+        onClickOutsideFRB && onClickOutsideFRB();
+      }
+    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, [onClickOutsideFRB]);
+
+  useEffect(() => {
+    if (likedBy && !loading && Boolean(likedBy?.data())) {
+      setLikeData(likedBy?.data().likedBy);
+      setLocalLike(likedBy?.data().likedBy.length);
     }
   }, [likedBy]);
 
@@ -85,8 +113,6 @@ function SinglePost({
       setComment("");
     }
   };
-
-  const delelePost = () => {};
 
   const handleLikeButton = async () => {
     if (!likeData.includes(session.data.user.email)) {
@@ -138,10 +164,52 @@ function SinglePost({
     }
   };
 
-  const deletePost = () => {};
+  const deleleButtonOnclick = () => {
+    if (deleteButtonStatus) {
+      setDeleteButtonStatus("");
+    } else {
+      setDeleteButtonStatus("hidden");
+    }
+  };
+
+  const deletePost = () => {
+    deleteDoc(doc(db, `users/${postOwner}/posts/${postId}`));
+    for (let comment of commentData.docs) {
+      deleteDoc(
+        doc(db, `users/${postOwner}/posts/${postId}/comments/${comment.id}`)
+      );
+    }
+  };
+
+  const deleteButton = () => {
+    if (postOwner == session.data.user.email) {
+      return (
+        <div className="absolute right-3 top-2">
+          <div className="relative">
+            <DotsHorizontalIcon
+              onClick={deleleButtonOnclick}
+              className="w-5 cursor-pointer"
+            />
+            <span
+              ref={deleteButtonRef}
+              onClick={deletePost}
+              className={
+                "absolute text-[13px] bg-gray-200 border bottom-[-16px] rounded-md right-[-1px] cursor-pointer" +
+                " " +
+                deleteButtonStatus
+              }
+            >
+              Xóa
+            </span>
+          </div>
+        </div>
+      );
+    }
+  };
 
   return (
-    <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm">
+    <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm relative">
+      {deleteButton()}
       <div className="flex p-4 space-x-2 w-full items-center">
         <Image
           src={avt}
@@ -200,7 +268,6 @@ function SinglePost({
         </div>
         <div className="w-[100%] h-[1px] bg-gray-300"></div>
       </div>
-
       <div className="flex flex-col w-full p-4 space-y-2">
         {commentData &&
           commentData.docs.map((data) => (
@@ -233,7 +300,7 @@ function SinglePost({
             <button
               onClick={(e) => submitComment(e)}
               type="submit"
-              className="bg-blue-300 p-1 rounded-lg text-[13px] font-medium"
+              className="bg-blue-400 p-1 rounded-lg text-[13px] font-medium"
             >
               Bình luận
             </button>

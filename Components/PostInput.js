@@ -113,7 +113,7 @@ function PostInput() {
           />
           <button
             type="submit"
-            className="border-2 bg-blue-600 rounded-lg h-8 shadow-md p-2 flex items-center text-[14px] font-medium"
+            className="border-2 bg-blue-400 rounded-lg h-8 shadow-md p-2 flex items-center text-[14px] font-medium"
             onClick={(e) => sendPost(e)}
           >
             Đăng
