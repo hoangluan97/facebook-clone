@@ -15,6 +15,7 @@ import { db } from "../FirebaseConfig";
 import FriendRequestBoard from "./FriendRequestBoard";
 import { Context } from "../pages/_app";
 import NotiBoard from "./NotiBoard";
+import { LogoutIcon } from "@heroicons/react/outline";
 
 function Header() {
   const { chatbox, noti } = useContext(Context);
@@ -173,18 +174,12 @@ function Header() {
           }}
         />
         <div
-          className="flex items-center w-10 h-10 overflow-hidden rounded-full cursor-pointer"
+          className="flex items-center w-10 h-10 overflow-hidden rounded-full justify-center bg-slate-200 cursor-pointer"
           onClick={() => {
             signOut();
           }}
         >
-          <Image
-            src={Avatar}
-            width={100}
-            height={100}
-            className="object-cover border "
-            layout="fixed"
-          />
+          <LogoutIcon className="w-5" />
         </div>
       </div>
     </div>

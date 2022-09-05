@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
   AnnotationIcon,
-  BeakerIcon,
   ShareIcon,
   ThumbUpIcon as ThumUpIconSolid,
 } from "@heroicons/react/solid";

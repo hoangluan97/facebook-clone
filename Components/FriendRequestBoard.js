@@ -33,7 +33,7 @@ function FriendRequestBoard({
     <div
       ref={ref}
       className={
-        "absolute shadow-md top-[78%] min-w-[200px] rounded-md min-h-[50px] right-48 z-10 flex flex-col justify-center items-center border-2 bg-white border-blue-400 " +
+        "absolute shadow-md top-[78%] min-w-[200px] rounded-md min-h-[50px] right-36 z-10 flex flex-col justify-center items-center border-2 bg-white border-blue-400 " +
         showFriendRequest
       }
     >
