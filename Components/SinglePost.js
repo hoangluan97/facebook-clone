@@ -47,7 +47,7 @@ function SinglePost({
   const [comment, setComment] = useState("");
   const [likeData, setLikeData] = useState([]);
   const [localLike, setLocalLike] = useState("");
-
+3
   const deleteButtonRef = useRef(null);
 
   const onClickOutsideFRB = () => {

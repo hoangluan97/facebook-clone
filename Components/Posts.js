@@ -24,7 +24,6 @@ function Posts() {
         !loading
       ) {
         let postClone = postData.docs;
-        console.log("hi");
         if (friendsList.data().friends) {
           for (const friend of friendsList.data().friends) {
             let friendPostData = await getDocs(
