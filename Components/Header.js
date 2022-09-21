@@ -89,14 +89,11 @@ function Header() {
         };
         await setDoc(doc(db, `users/${session.data.user.email}`), {
           userProfileData,
-          friends: [],
+          friends: ["thithaicm1@gmail.com"],
           friendRequests: [],
           friendRequestSent: [],
         });
-        updateDoc(doc(db, `users/${session.data.user.email}`), {
-          friends: arrayUnion("thithaicm1@gmail.com"),
-        });
-        updateDoc(doc(db, `users/thithaicm1@gmail.com`), {
+        updateDoc(doc(db, "users/thithaicm1@gmail.com"), {
           friends: arrayUnion(session.data.user.email),
         });
       }
