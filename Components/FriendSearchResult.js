@@ -10,13 +10,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
-import {
-  BeakerIcon,
-  UserAddIcon,
-  UserCircleIcon,
-  UserIcon,
-  UserRemoveIcon,
-} from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
 
 function FriendSearchResult() {

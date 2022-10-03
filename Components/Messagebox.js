@@ -13,7 +13,6 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import Message from "./Message";
 
 function Messagebox({ messageTo, showStatus, handleClickShowChatbox, name }) {
-  console.log(showStatus);
   const session = useSession();
   const messageRef = useRef(null);
   const [message, setMessage] = useState("");

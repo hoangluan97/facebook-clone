@@ -134,7 +134,7 @@ function Header() {
               value={searchInput}
               type="text"
               placeholder="Search Facebook"
-              className="focus:outline-none w-40 md:w-60 bg-transparent ml-2 placeholder:text-sm flex-shink "
+              className="focus:outline-none w-24 md:w-60 bg-transparent ml-2 placeholder:text-sm flex-shink "
             />
             <button
               type="submit"

@@ -1,16 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import {
-  arrayRemove,
-  arrayUnion,
-  collection,
-  doc,
-  limit,
-  orderBy,
-  query,
-  updateDoc,
-} from "firebase/firestore";
-import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import { collection, limit, orderBy, query } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../FirebaseConfig";
 import { useSession } from "next-auth/react";
 import Notitag from "./Notitag";
@@ -58,7 +48,7 @@ function NotiBoard({ showNoti, onClickOutsideNB, notiRef }) {
     <div
       ref={ref}
       className={
-        "absolute shadow-md right-20 top-[78%] rounded-md bg-white w-80 justify-start items-start  z-10 flex flex-col border-2 border-blue-400 space-y-3 py-2 px-1" +
+        "absolute shadow-md right-20 top-[78%] rounded-md bg-white w-70 justify-start items-start  z-10 flex flex-col border-2 border-blue-400 space-y-3 py-2 px-1" +
         " " +
         showNoti
       }

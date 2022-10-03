@@ -8,7 +8,6 @@ import {
 } from "@heroicons/react/solid";
 import {
   DotsHorizontalIcon,
-  ThumbDownIcon,
   ThumbUpIcon,
 } from "@heroicons/react/outline";
 
@@ -24,7 +23,6 @@ import {
 import { db } from "../FirebaseConfig";
 import Comment from "./Comment";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { async } from "@firebase/util";
 
 function SinglePost({
   name,

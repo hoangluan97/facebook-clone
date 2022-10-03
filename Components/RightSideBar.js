@@ -1,8 +1,5 @@
 import React, { useContext } from "react";
-import SideBarRow from "./SideBarRow";
-import { BeakerIcon } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import OnlineFriend from "./OnlineFriend";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";

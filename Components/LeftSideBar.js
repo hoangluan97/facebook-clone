@@ -1,7 +1,6 @@
 import React from "react";
 import SideBarRow from "./SideBarRow";
 import {
-  BeakerIcon,
   GlobeIcon,
   LibraryIcon,
   PhoneIcon,

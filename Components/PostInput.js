@@ -1,20 +1,16 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import SideBarRow from "./SideBarRow";
 import InputIcon from "./InputIcon";
 import {
-  BeakerIcon,
   PhotographIcon,
   TagIcon,
   VideoCameraIcon,
-  XCircleIcon,
   XIcon,
 } from "@heroicons/react/solid";
 import { db } from "../FirebaseConfig";
 import {
   doc,
-  updateDoc,
   setDoc,
   collection,
   addDoc,

@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
-import Messagebox from "../Components/Messagebox";
 import { Context } from "../pages/_app";
 
 function OnlineFriend({ onlineFriendEmail }) {
