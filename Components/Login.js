@@ -28,7 +28,7 @@ function Login() {
           }}
           className="flex justify-center cursor-pointer border-2 text-black border-blue-600 w-[200px] p-3"
         >
-          Login with Gmail
+          Login with Facedbook
         </div>
       </div>
     </div>
