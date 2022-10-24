@@ -11,12 +11,6 @@ function FriendRequestNoti({ friendEmail }) {
   const [friendProfile, loading, error] = useDocument(
     doc(db, `users/${friendEmail}`)
   );
-  //   const [friendProfileData, setFriendProfileData] = useState("");
-  //   useEffect(() => {
-  //     if (friendProfile && !loading) {
-  //       setFriendProfileData(friendProfile.data());
-  //     }
-  //   });
 
   const handleConfirm = () => {
     updateDoc(doc(db, `users/${session.data.user.email}`), {

@@ -10,17 +10,6 @@ function Layout({ children }) {
     return <Login />;
   }
   if (session.status === "authenticated") {
-    // const [user, loading, error] = useDocument(
-    //   doc(db, `users/${session.data.user.email}`)
-    // );
-    // useEffect(() => {
-    //   if (user && !loading) {
-    //     if (!user.exists) {
-    //       console.log(user.exists);
-    //       signOut();
-    //     }
-    //   }
-    // }, [user]);
     return (
       <div className="flex flex-col min-h-screen">
         <Header />

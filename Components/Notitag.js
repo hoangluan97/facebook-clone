@@ -15,7 +15,6 @@ function Notitag({ noti }) {
   } else if (24 * 60 * 60 * 1000 <= timeDiff) {
     timeDisplay = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + " ngày";
   }
-  console.log(timeDiff);
   return (
     <div className="flex space-x-2 justify-start w-90% items-center">
       <div>

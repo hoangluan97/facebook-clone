@@ -19,7 +19,6 @@ function StoryCard({ imageSrc, bgColor }) {
           className="rounded-full"
         />
       </div>
-      {/* <Image src={imageSrc} layout="fixed" /> */}
       <p className="absolute bottom-2 left-2 text-[11px] font-medium text-black text-ellipsis w-10/12">
         {session.data.user.name}
       </p>

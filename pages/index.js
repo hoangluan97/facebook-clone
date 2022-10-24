@@ -1,11 +1,10 @@
-import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
+import React from "react";
 import LeftSideBar from "../Components/LeftSideBar";
 import NewsFeed from "../Components/NewsFeed";
 import RightSideBar from "../Components/RightSideBar";
 
 export default function Home() {
-  const session = useSession();
   return (
     <div>
       <Head>

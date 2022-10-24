@@ -50,7 +50,6 @@ function PostInput() {
           (error) => console.error(error),
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log(downloadURL);
               setDoc(
                 doc(
                   db,
@@ -85,6 +84,7 @@ function PostInput() {
     reader.onload = (readerEvent) => {
       setImageToPost(readerEvent.target.result);
       setImageToStore(e.target.files[0]);
+      console.log(e.target.files[0]);
     };
   };
 

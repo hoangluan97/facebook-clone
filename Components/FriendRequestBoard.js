@@ -16,11 +16,10 @@ function FriendRequestBoard({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        ref.current &&
         !ref.current.contains(event.target) &&
         !friendRequestRef.current.contains(event.target)
       ) {
-        onClickOutsideFRB && onClickOutsideFRB();
+        onClickOutsideFRB();
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -47,5 +46,3 @@ function FriendRequestBoard({
 }
 
 export default FriendRequestBoard;
-
-// after:content-[] after:absolute after:bottom-[100%] after:left-[50%] after:border-[5px] after:border-transparent after:border-b-black

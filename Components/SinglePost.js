@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
   AnnotationIcon,
   ShareIcon,
   ThumbUpIcon as ThumUpIconSolid,
 } from "@heroicons/react/solid";
-import {
-  DotsHorizontalIcon,
-  ThumbUpIcon,
-} from "@heroicons/react/outline";
-
+import { DotsHorizontalIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import Image from "next/image";
 import {
   doc,
   updateDoc,
@@ -23,6 +19,7 @@ import {
 import { db } from "../FirebaseConfig";
 import Comment from "./Comment";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import { useRouter } from "next/router";
 
 function SinglePost({
   name,
@@ -34,6 +31,7 @@ function SinglePost({
   postOwner,
 }) {
   const session = useSession();
+  const router = useRouter();
   const [deleteButtonStatus, setDeleteButtonStatus] = useState("hidden");
   const [commentData] = useCollection(
     collection(db, `users/${postOwner}/posts/${postId}/comments`)
@@ -45,7 +43,7 @@ function SinglePost({
   const [comment, setComment] = useState("");
   const [likeData, setLikeData] = useState([]);
   const [localLike, setLocalLike] = useState("");
-3
+  3;
   const deleteButtonRef = useRef(null);
 
   const onClickOutsideFRB = () => {
@@ -57,10 +55,8 @@ function SinglePost({
       if (
         deleteButtonRef.current &&
         !deleteButtonRef.current.contains(event.target)
-        // &&
-        // !friendRequestRef.current.contains(event.target)
       ) {
-        onClickOutsideFRB && onClickOutsideFRB();
+        onClickOutsideFRB();
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -205,7 +201,7 @@ function SinglePost({
   };
 
   return (
-    <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm relative">
+    <div className="bg-white w-full rounded-md flex flex-col items-center shadow-sm relative mb-3 sm:w-full">
       {deleteButton()}
       <div className="flex p-4 space-x-2 w-full items-center">
         <Image
@@ -216,7 +212,12 @@ function SinglePost({
           className="rounded-full"
         />
         <div className="flex flex-col justify-start">
-          <p className="font-medium">{name}</p>
+          <p
+            onClick={() => router.push(`/PersonalPage/${postOwner}`)}
+            className="font-medium cursor-pointer"
+          >
+            {name}
+          </p>
           <p className="text-[11px]">{time}</p>
         </div>
       </div>

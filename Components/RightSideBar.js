@@ -10,7 +10,6 @@ import { Context } from "../pages/_app";
 function RightSideBar() {
   const { chatbox } = useContext(Context);
   const [showChatBox, setShowChatBox] = chatbox;
-  console.log(showChatBox);
   const session = useSession();
   const [onlineFriend, loading, error] = useDocument(
     doc(db, `users/${session.data.user.email}`)

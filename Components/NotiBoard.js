@@ -11,11 +11,11 @@ function NotiBoard({ showNoti, onClickOutsideNB, notiRef }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        ref.current &&
+        // ref.current &&
         !ref.current.contains(event.target) &&
         !notiRef.current.contains(event.target)
       ) {
-        onClickOutsideNB && onClickOutsideNB();
+        onClickOutsideNB();
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -27,7 +27,7 @@ function NotiBoard({ showNoti, onClickOutsideNB, notiRef }) {
   const [notiData, loading, error] = useCollection(
     query(
       collection(db, `noti/posts/${session.data.user.email}`),
-      orderBy("Time"),
+      orderBy("Time", "desc"),
       limit(10)
     )
   );
