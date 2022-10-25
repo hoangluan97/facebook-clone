@@ -29,42 +29,42 @@ function PostInput() {
   const sendPost = (e) => {
     // console.log(imageToPost);
     e.preventDefault();
-    addDoc(collection(db, `users/${session.data.user.email}/posts`), {
-      name: session.data.user.name,
-      avt: session.data.user.image,
-      postContent: postContent,
-      postOwner: session.data.user.email,
-      time: serverTimestamp(),
-      likedBy: [],
-    }).then((docParam) => {
-      if (imageToStore) {
-        const postimageRef = ref(
-          storage,
-          `images/${session.data.user.email}/${docParam.id}/${imageToStore}`
-        );
-        const uploadTask = uploadBytesResumable(postimageRef, imageToStore);
 
-        uploadTask.on(
-          "state_changed",
-          null,
-          (error) => console.error(error),
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              setDoc(
-                doc(
-                  db,
-                  `users/${session.data.user.email}/posts/${docParam.id}`
-                ),
-                {
-                  postImgSrc: downloadURL,
-                },
-                { merge: true }
-              );
+    if (imageToStore) {
+      const postimageRef = ref(
+        storage,
+        `images/${session.data.user.email}/${imageToStore}`
+      );
+      const uploadTask = uploadBytesResumable(postimageRef, imageToStore);
+
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => console.error(error),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            addDoc(collection(db, `users/${session.data.user.email}/posts`), {
+              name: session.data.user.name,
+              avt: session.data.user.image,
+              postContent: postContent,
+              postOwner: session.data.user.email,
+              time: new Date(),
+              likedBy: [],
+              postImgSrc: downloadURL,
             });
-          }
-        );
-      }
-    });
+          });
+        }
+      );
+    } else {
+      addDoc(collection(db, `users/${session.data.user.email}/posts`), {
+        name: session.data.user.name,
+        avt: session.data.user.image,
+        postContent: postContent,
+        postOwner: session.data.user.email,
+        time: new Date(),
+        likedBy: [],
+      });
+    }
     setPostContent("");
     setImageToPost("");
     setImageToStore("");
@@ -84,7 +84,6 @@ function PostInput() {
     reader.onload = (readerEvent) => {
       setImageToPost(readerEvent.target.result);
       setImageToStore(e.target.files[0]);
-      console.log(e.target.files[0]);
     };
   };
 

@@ -16,10 +16,11 @@ import {
   serverTimestamp,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../FirebaseConfig";
+import { db, storage } from "../FirebaseConfig";
 import Comment from "./Comment";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
+import { deleteObject, ref } from "firebase/storage";
 
 function SinglePost({
   name,
@@ -29,6 +30,7 @@ function SinglePost({
   timestamp,
   postId,
   postOwner,
+  imgId,
 }) {
   const session = useSession();
   const router = useRouter();
@@ -164,14 +166,16 @@ function SinglePost({
       setDeleteButtonStatus("hidden");
     }
   };
-
   const deletePost = () => {
     deleteDoc(doc(db, `users/${postOwner}/posts/${postId}`));
-    for (let comment of commentData.docs) {
-      deleteDoc(
-        doc(db, `users/${postOwner}/posts/${postId}/comments/${comment.id}`)
-      );
+    if (commentData) {
+      for (let comment of commentData.docs) {
+        deleteDoc(
+          doc(db, `users/${postOwner}/posts/${postId}/comments/${comment.id}`)
+        );
+      }
     }
+    // deleteObject(ref(storage, `images/${postOwner}/${imgId}`).child());
   };
 
   const deleteButton = () => {

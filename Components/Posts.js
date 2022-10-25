@@ -156,6 +156,7 @@ function Posts() {
             postContent={post.data().postContent}
             postImgSrc={post.data().postImgSrc}
             timestamp={post.data().time}
+            imgId={post.data().imgId}
           />
         </div>
       );
@@ -170,6 +171,7 @@ function Posts() {
           postContent={post.data().postContent}
           postImgSrc={post.data().postImgSrc}
           timestamp={post.data().time}
+          imgId={post.data().imgId}
         />
       );
     }
